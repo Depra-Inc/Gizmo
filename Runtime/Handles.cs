@@ -1,18 +1,18 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 // © 2023-2024 Nikolay Melnikov <n.melnikov@depra.org>
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Depra.Gizmo
 {
 	public static class Handles
 	{
-		public static void DrawRay(Vector3 startPoint, Vector3 endPoint, Color color, float distance, float duration)
-		{
-			var direction = endPoint - startPoint;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void DrawRay(Vector3 startPoint, Vector3 direction, Color color, float distance, float duration) => 
 			Debug.DrawRay(startPoint, direction * distance, color, duration);
-		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void DrawBox(Vector3 position, Quaternion rotation, Vector3 scale, Color color, float duration)
 		{
 			var matrix = new Matrix4x4();

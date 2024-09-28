@@ -1,12 +1,11 @@
 {
 	"name": "com.depra.gizmo",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"displayName": "Depra.Gizmo",
 	"description": "",
 	"unity": "2022.3",
 	"license": "Apache-2.0",
 	"keywords": [
-		"depra",
 		"unity",
 		"gizmo"
 	],
