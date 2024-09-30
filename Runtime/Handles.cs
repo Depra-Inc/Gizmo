@@ -13,6 +13,15 @@ namespace Depra.Gizmo
 			Debug.DrawLine(start, end, color, duration);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void DrawLines(Vector3[] points)
+		{
+			for (var index = 0; index < points.Length - 1; index++)
+			{
+				Gizmos.DrawLine(points[index], points[index + 1]);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void DrawRay(Vector3 start, Vector3 direction, Color color, float distance, float duration) =>
 			Debug.DrawRay(start, direction * distance, color, duration);
 
@@ -53,20 +62,23 @@ namespace Depra.Gizmo
 		{
 			const float ANGLE = 10.0f;
 
-			var startX = new Vector3(position.x, position.y + radius * Mathf.Sin(0), position.z + radius * Mathf.Cos(0));
-			var startY = new Vector3(position.x + radius * Mathf.Cos(0), position.y, position.z + radius * Mathf.Sin(0));
-			var startZ = new Vector3(position.x + radius * Mathf.Cos(0), position.y + radius * Mathf.Sin(0), position.z);
+			var startX = new Vector3(position.x, position.y + radius * Mathf.Sin(0),
+				position.z + radius * Mathf.Cos(0));
+			var startY = new Vector3(position.x + radius * Mathf.Cos(0), position.y,
+				position.z + radius * Mathf.Sin(0));
+			var startZ = new Vector3(position.x + radius * Mathf.Cos(0), position.y + radius * Mathf.Sin(0),
+				position.z);
 
 			for (var index = 1; index < 37; index++)
 			{
 				var endX = new Vector3(position.x,
 					position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad),
 					position.z + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad));
-				var endY = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad), 
+				var endY = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad),
 					position.y,
 					position.z + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad));
 				var endZ = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad),
-					position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad), 
+					position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad),
 					position.z);
 
 				Debug.DrawLine(startX, endX, color, duration, depthTest);
@@ -77,6 +89,47 @@ namespace Depra.Gizmo
 				startY = endY;
 				startZ = endZ;
 			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void DrawArrow(Vector3 origin, Vector3 dirMagnitude, Color color, float duration,
+			float headSize = 0.1f, bool absHeadSize = false)
+		{
+			if (absHeadSize == false)
+			{
+				headSize *= dirMagnitude.magnitude;
+			}
+
+			var end = origin + dirMagnitude;
+			var (left, up) = GetComponentsFromNormal(dirMagnitude);
+
+			// Shaft.
+			Gizmos.DrawLine(origin, end);
+
+			// 4 Arrowhead sides.
+			var arrowBase = end - dirMagnitude.normalized * headSize;
+			DrawLine(end, arrowBase + left * headSize, color, duration);
+			DrawLine(end, arrowBase + up * headSize, color, duration);
+			DrawLine(end, arrowBase - left * headSize, color, duration);
+			DrawLine(end, arrowBase - up * headSize, color, duration);
+
+			// 2 Arrowhead bases.
+			DrawLine(arrowBase + left * headSize, arrowBase - left * headSize, color, duration);
+			DrawLine(arrowBase + up * headSize, arrowBase - up * headSize, color, duration);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static (Vector3 left, Vector3 up) GetComponentsFromNormal(Vector3 normal)
+		{
+			var left = Vector3.Cross(normal, Vector3.up).normalized;
+			var up = Vector3.Cross(left, normal).normalized;
+			if (Mathf.Approximately(left.sqrMagnitude, 0f))
+			{
+				left = Vector3.left;
+				up = Vector3.forward;
+			}
+
+			return (left, up);
 		}
 	}
 }
