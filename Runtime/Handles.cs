@@ -92,22 +92,22 @@ namespace Depra.Gizmo
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void DrawArrow(Vector3 origin, Vector3 dirMagnitude, Color color, float duration,
+		public static void DrawArrow(Vector3 origin, Vector3 direction, Color color, float duration,
 			float headSize = 0.1f, bool absHeadSize = false)
 		{
 			if (absHeadSize == false)
 			{
-				headSize *= dirMagnitude.magnitude;
+				headSize *= direction.magnitude;
 			}
 
-			var end = origin + dirMagnitude;
-			var (left, up) = GetComponentsFromNormal(dirMagnitude);
+			var end = origin + direction;
+			var (left, up) = GetComponentsFromNormal(direction);
 
 			// Shaft.
-			Gizmos.DrawLine(origin, end);
+			DrawLine(origin, end, color, duration);
 
 			// 4 Arrowhead sides.
-			var arrowBase = end - dirMagnitude.normalized * headSize;
+			var arrowBase = end - direction.normalized * headSize;
 			DrawLine(end, arrowBase + left * headSize, color, duration);
 			DrawLine(end, arrowBase + up * headSize, color, duration);
 			DrawLine(end, arrowBase - left * headSize, color, duration);
