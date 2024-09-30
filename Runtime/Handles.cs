@@ -9,8 +9,12 @@ namespace Depra.Gizmo
 	public static class Handles
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void DrawRay(Vector3 startPoint, Vector3 direction, Color color, float distance, float duration) => 
-			Debug.DrawRay(startPoint, direction * distance, color, duration);
+		public static void DrawLine(Vector3 start, Vector3 end, Color color, float duration) =>
+			Debug.DrawLine(start, end, color, duration);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void DrawRay(Vector3 start, Vector3 direction, Color color, float distance, float duration) =>
+			Debug.DrawRay(start, direction * distance, color, duration);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void DrawBox(Vector3 position, Quaternion rotation, Vector3 scale, Color color, float duration)
@@ -49,30 +53,29 @@ namespace Depra.Gizmo
 		{
 			const float ANGLE = 10.0f;
 
-			var x = new Vector3(position.x, position.y + radius * Mathf.Sin(0), position.z + radius * Mathf.Cos(0));
-			var y = new Vector3(position.x + radius * Mathf.Cos(0), position.y, position.z + radius * Mathf.Sin(0));
-			var z = new Vector3(position.x + radius * Mathf.Cos(0), position.y + radius * Mathf.Sin(0), position.z);
-
-			Vector3 newX;
-			Vector3 newY;
-			Vector3 newZ;
+			var startX = new Vector3(position.x, position.y + radius * Mathf.Sin(0), position.z + radius * Mathf.Cos(0));
+			var startY = new Vector3(position.x + radius * Mathf.Cos(0), position.y, position.z + radius * Mathf.Sin(0));
+			var startZ = new Vector3(position.x + radius * Mathf.Cos(0), position.y + radius * Mathf.Sin(0), position.z);
 
 			for (var index = 1; index < 37; index++)
 			{
-				newX = new Vector3(position.x, position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad),
+				var endX = new Vector3(position.x,
+					position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad),
 					position.z + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad));
-				newY = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad), position.y,
+				var endY = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad), 
+					position.y,
 					position.z + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad));
-				newZ = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad),
-					position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad), position.z);
+				var endZ = new Vector3(position.x + radius * Mathf.Cos(ANGLE * index * Mathf.Deg2Rad),
+					position.y + radius * Mathf.Sin(ANGLE * index * Mathf.Deg2Rad), 
+					position.z);
 
-				Debug.DrawLine(x, newX, color, duration, depthTest);
-				Debug.DrawLine(y, newY, color, duration, depthTest);
-				Debug.DrawLine(z, newZ, color, duration, depthTest);
+				Debug.DrawLine(startX, endX, color, duration, depthTest);
+				Debug.DrawLine(startY, endY, color, duration, depthTest);
+				Debug.DrawLine(startZ, endZ, color, duration, depthTest);
 
-				x = newX;
-				y = newY;
-				z = newZ;
+				startX = endX;
+				startY = endY;
+				startZ = endZ;
 			}
 		}
 	}
