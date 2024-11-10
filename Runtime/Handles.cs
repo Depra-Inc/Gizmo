@@ -1,15 +1,19 @@
 ﻿// SPDX-License-Identifier: Apache-2.0
 // © 2023-2024 Nikolay Melnikov <n.melnikov@depra.org>
 
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Depra.Gizmo
 {
 	public static class Handles
 	{
+		[Conditional("DEBUG")]
 		public static void DrawLine(Vector3 start, Vector3 end, Color color, float duration) =>
 			Debug.DrawLine(start, end, color, duration);
 
+		[Conditional("DEBUG")]
 		public static void DrawLines(Vector3[] points, Color color, float duration)
 		{
 			for (var index = 0; index < points.Length - 1; index++)
@@ -17,10 +21,16 @@ namespace Depra.Gizmo
 				DrawLine(points[index], points[index + 1], color, duration);
 			}
 		}
+		
+		[Conditional("DEBUG")]
+		public static void DrawRay(Vector3 start, Vector3 direction, Color color, float duration) =>
+			Debug.DrawRay(start, direction, color, duration);
 
+		[Conditional("DEBUG")]
 		public static void DrawRay(Vector3 start, Vector3 direction, Color color, float distance, float duration) =>
 			Debug.DrawRay(start, direction * distance, color, duration);
 
+		[Conditional("DEBUG")]
 		public static void DrawBox(Vector3 position, Quaternion rotation, Vector3 scale, Color color, float duration)
 		{
 			var matrix = new Matrix4x4();
@@ -52,6 +62,7 @@ namespace Depra.Gizmo
 			DrawLine(point4, point8, color, duration);
 		}
 
+		[Conditional("DEBUG")]
 		public static void DrawWireSphere(Vector3 position, Color color, float radius = 1.0f, float duration = 0)
 		{
 			const float ANGLE = 10.0f;
@@ -88,6 +99,7 @@ namespace Depra.Gizmo
 			}
 		}
 
+		[Conditional("DEBUG")]
 		public static void DrawWireCircle(Vector3 origin, Vector3 direction, float radius, Color color,
 			float duration = 0, int segments = 32)
 		{
@@ -117,6 +129,7 @@ namespace Depra.Gizmo
 			}
 		}
 
+		[Conditional("DEBUG")]
 		public static void DrawWireArc(Vector3 position, Vector3 direction, float angle, float radius,
 			Color color, float duration = 0, float segments = 32)
 		{
